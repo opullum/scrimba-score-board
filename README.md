@@ -3,6 +3,8 @@
 
 Completed application for Solo Project 2 (Score Board) of the Scrimba Full Stack Developer course. The site represents a sports game with default counters (Home, Guest, Fouls, Period) alongside the abiility to create new counters. This assignment appears after learning basic HTML, CSS, and JavaScript syntax. The course allows for students to practice implementing designs based on Figma files, with hosting done on Vercel and Netlify.
 
+[Link to Live Demo](https://scrimba-fs-score-board.netlify.app/)
+
 <details>
   <summary>Project Screenshots</summary>
   
@@ -24,7 +26,7 @@ These are added features outside of the project requirements and additional chal
 - Ability to remove new panels.
 - Ability to set a custom time (seconds)
 
-Full Stack Developer course available through Scrimba: https://scrimba.com/.
+Full Stack Developer course available through Scrimba: [Full Stack Developer Path](https://scrimba.com/fullstack-path-c0fullstack).
 
 
 
