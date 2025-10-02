@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.cdnfonts.com/css/cursed-timer-ulil" rel="stylesheet">
+    <title>Score Counter</title>
+</head>
+<body>
+
+    <div class="score-body">
+        <div class="timer-elem">
+            <h1 class="timer-label">Timer</h1>
+            <div class="timer-body">
+                <h2 class="timer-body-label">00:00</h2>
+            </div>
+            <div class="timer-btns">
+                <button class="timer-btn new-game-btn" onclick="newGame()">New Game</button>
+                <button class="timer-btn" onclick="setTime()">Set Time</button>
+                <button class="timer-btn" id="pauseBtn" onclick="pauseTimer()">Pause</button>
+            </div>
+        </div>
+
+        <div class="scores" id="scores-grid">
+            <div class="score-panel" id="home-team">
+                <h1 class="score-panel-title">Home</h1>
+                <div class="score-panel-display">
+                    <h2 class="score-text" id="score-text">0</h2>
+                </div>
+                <div class="score-panel-btns">
+                    <div class="increment-btns"> 
+                        <button class="panel-btn">+1</button>
+                        <button class="panel-btn">+2</button>
+                        <button class="panel-btn">+3</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="score-panel" id="guest-team">
+                <h1 class="score-panel-title">Guest</h1>
+                <div class="score-panel-display">
+                    <h2 class="score-text" id="score-text">0</h2>
+                </div>
+                <div class="score-panel-btns">
+                    <div class="increment-btns"> 
+                        <button class="panel-btn">+1</button>
+                        <button class="panel-btn">+2</button>
+                        <button class="panel-btn">+3</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="score-panel">
+                <h1 class="score-panel-title">Fouls</h1>
+                <div class="score-panel-display">
+                    <h2 class="score-text" id="score-text">0</h2>
+                </div>
+                <div class="score-panel-btns">
+                    <div class="increment-btns"> 
+                        <button class="panel-btn">+1</button>
+                        <button class="panel-btn">+2</button>
+                        <button class="panel-btn">+3</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="score-panel">
+                <h1 class="score-panel-title">Period</h1>
+                <div class="score-panel-display">
+                    <h2 class="score-text" id="score-text">0</h2>
+                </div>
+                <div class="score-panel-btns">
+                    <div class="increment-btns"> 
+                        <button class="panel-btn">+1</button>
+                        <button class="panel-btn">+2</button>
+                        <button class="panel-btn">+3</button>
+                    </div>
+                </div>
+            </div>
+
+            <button class="new-panel-btn" onclick="newPanel()">+</button>
+        </div>
+    </div>
+
+    <script src="index.js"></script>
+</body>
+</html>

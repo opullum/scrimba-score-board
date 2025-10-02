@@ -1,0 +1,260 @@
+
+
+@font-face {
+    font-family: 'Cursed Timer ULiL', sans-serif;
+    src: url('fonts/CursedTimerUlil-Aznm.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* CSS Selectors */
+
+:root {
+    --deep-blue: #1B244A;
+    --deeper-blue: #151c39;
+    --black: #080001;
+    --red: #F94F6D;
+    --white: #EEEEEE;
+    --light-blue: #9AABD8;
+    --light-green: #26833f;
+    
+}
+
+
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--deeper-blue);
+}
+
+
+/* Class Styling */
+
+.score-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    box-shadow: 0px 0px 10px var(--black);
+    background-color: var(--deep-blue);
+
+    border-radius: 20px;
+    width: 750px;
+} 
+
+.timer-elem {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    width: 640px;
+    height: 320px;
+    text-align: center;
+
+    margin-bottom: 0;
+}
+
+.timer-label {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 40px;
+    
+    color: var(--white);
+    margin: 10px 0 20px 0;
+}
+
+.timer-body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background-color: var(--black);
+    border-radius: 5px;
+
+    width: 360px;
+    height: 120px;
+}
+
+.timer-body-label {
+    font-family: 'Cursed Timer ULiL', sans-serif;
+    text-shadow: 0px 0px 5px red;
+    font-size: 90px;
+    color: var(--red);
+
+    margin: 0 0 -20px 0;
+}
+
+.timer-btns {
+    display: flex;
+    gap: 5px;
+}
+
+.timer-btn {
+    background: transparent;
+    width: 120px;
+    height: 45px;
+
+    font-size: 18px;
+    font-family: 'Cursed Timer ULiL', sans-serif;
+    color: var(--light-blue);
+    transition: background-color 0.2s linear;
+
+    border: 2px solid var(--light-blue);
+    border-radius: 2px;
+
+    margin-top: 20px;
+}
+
+
+.timer-btn:hover {
+    /* #F94F6D */
+    background-color: rgba(154, 171, 216, 0.5);
+    cursor: pointer;
+}
+
+.new-game-btn {
+    border: 2px solid var(--red);
+    color: var(--red);
+}
+
+.new-game-btn:hover {
+    background-color: rgba(249, 79, 109, 0.5);
+    cursor: pointer;
+}
+
+.scores {
+    display: grid;
+    place-items: center center;
+    grid-template-columns: 200px 200px 200px;
+    grid-template-rows: 300px 300px 300px;
+    column-gap: 20px;
+}
+
+.score-panel {
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    padding-bottom: 20px;
+    gap: 10px;
+
+    height: 300px;
+    width: 250px;
+}
+
+
+.score-panel-display {
+    background-color: var(--black);
+    border-radius: 5px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+
+    height: 120px;
+    width: 155px;
+}
+
+.score-text {
+    color: var(--red);
+    font-family: 'Cursed Timer ULiL', sans-serif;
+    text-shadow: 0px 0px 5px red;
+    font-size: 80px;
+    margin: 0 0 -20px 0;
+    text-align: center;
+}
+
+.score-panel-btns {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    margin-top: 10px;
+    gap: 5px;
+
+    width: 155px;
+    height: 45px;
+}
+
+.increment-btns {
+    display: flex;
+    justify-content: space-between;
+    gap: 5px;
+}
+
+.panel-btn {
+    background: transparent;
+
+    border: 2px solid var(--light-blue);
+    font-family: 'Cursed Timer ULiL', sans-serif;
+    border-radius: 2px;
+    transition: background-color 0.2s linear;
+
+    width: 45px;
+    height: 45px;
+
+    font-size: 18px;
+    color: var(--light-blue);
+}
+
+
+.panel-btn:hover {
+    background-color: rgba(154, 171, 216, 0.5);
+    cursor: pointer;
+}
+
+.score-panel-header {
+    display: flex;
+    position: relative;
+}
+
+.score-panel-title {
+    color: var(--white);
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-style: bold;
+    font-size: 40px;
+
+    margin: 0;
+}
+
+.remove-panel-btn {
+    background: transparent;
+    transition: background-color 0.2s linear;
+
+    border: 2px solid var(--light-blue);
+    border-radius: 2px;
+    width: 140px;
+    height: 30px;
+    font-size: 18px;
+    color: var(--light-blue);
+}
+
+.remove-panel-btn:hover {
+    background-color: rgba(154, 171, 216, 0.5);
+    cursor: pointer;
+}
+
+.new-panel-btn {
+    background: transparent;
+
+    border: 2px solid var(--light-blue);
+    border-radius: 5px;
+    width: 150px;
+    height: 220px;
+    font-size: 96px;
+    color: var(--light-blue);
+    transition: background-color 0.2s linear;
+
+    order: 999;
+}
+
+.new-panel-btn:hover {
+    background-color: rgba(154, 171, 216, 0.5);
+    cursor: pointer;
+}
