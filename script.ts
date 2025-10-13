@@ -31,11 +31,12 @@ const moveAddPanel = (): void => {
  * @param panelName The name of the new panel.
  * @returns void
  */
-const newPanel = (panelName : string): void => {
+const newPanel = (panelName : string | null): void => {
 
     if (panelName == null) {
-        panelName = prompt("Enter a name for the new panel");
-        console.log(panelName == "");
+        while (panelName == null) {
+            panelName = prompt("Enter a name for the new panel");
+        }
     }
 
     /**
@@ -140,17 +141,30 @@ const resetAllPanels = (): void => {
     }
 }
 
-function removePanel(event) {
-    const panelGrid = document.getElementById('scores-grid');
-    const buttonElem = event.currentTarget;
-    const panel = buttonElem.closest('.score-panel');
-    const index = getPanelIndex(panel);
+const removePanel = (event: Event): void => {
+    const panelGrid: HTMLElement | null = document.getElementById('scores-grid');
+    const buttonElem: HTMLElement | null = event.currentTarget as HTMLElement | null;
+
+    if (!buttonElem || !panelGrid) {
+        console.log("Unable to find required elements for removePanel()");
+        return;
+    }
+
+    const panel: HTMLElement | null = buttonElem.closest('.score-panel');
+    let index : number | undefined;
+    if (panel) { index = getPanelIndex(panel); } 
+
+    if (!panel || !index) {
+        console.log("Unable to find required elements for removePanel()");
+        return;
+    } 
+
     panelScores.splice(index, 1);
     panelGrid.removeChild(panel);
     moveAddPanel();
 }
 
-function addScore(event, increment) {
+const addScore = (event: Event, increment: number) =>  {
     const buttonElem = event.currentTarget;
     console.log(buttonElem);
     // const panelElem = buttonElem.parentNode.parentNode.parentNode;
@@ -164,15 +178,15 @@ function addScore(event, increment) {
     if (scoresIndex == 0 || scoresIndex == 1) { highlightWinning(); }
 }
 
-function formatTime(timeSeconds) {
+function formatTime(timeSeconds: number) {
     let remainingMinutes = Math.floor(timeSeconds / 60);
     let remainingSeconds = timeSeconds % 60;
     return `${remainingMinutes}:${remainingSeconds.toString().padStart(2, '0')}`;
 }
 
 function highlightWinning() {
-    let homePanel = document.getElementById('home-team').querySelector('.score-panel-display');
-    let guestPanel = document.getElementById('guest-team').querySelector('.score-panel-display');
+    let homePanel: Element = document.getElementById('home-team').querySelector('.score-panel-display');
+    let guestPanel: Element = document.getElementById('guest-team').querySelector('.score-panel-display');
 
     console.log("reached here");
     console.log(`Home: ${panelScores[0]} Guest: ${panelScores[1]}`);
@@ -240,11 +254,12 @@ document.querySelectorAll('.increment-btns').forEach(panelBtns => {
 
 const MAXIMUM_PANELS = 9;
 const panelScores: number[] = [0, 0, 0, 0];
-const currentTime: number = 300;
 const timerElem: Element = document.querySelector('.timer-body-label');
 
+let currentTime: number = 300;
 let timerInterval;
 let running: boolean = true;
+
 startTimer();
 
 
