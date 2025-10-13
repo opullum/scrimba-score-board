@@ -1,19 +1,37 @@
 
-function moveAddPanel() {
-    const gridContainer = document.querySelector('.scores');
-    const addPanelElem = gridContainer.querySelector('.new-panel-btn');
-    console.log(addPanelElem);
+
+/**
+ * Adds a new panel to the page. If the maximum panels have been reached
+ * then hide the panel addition element.
+ * @returns void
+ */
+
+const moveAddPanel = (): void => {
+    const gridContainer : HTMLElement | null = document.querySelector('.scores') 
+    if (!gridContainer) {
+        console.log("Unable to find gridContainer for function moveAddPanel()");
+        return;
+    }
+
+    const addPanelElem: HTMLElement | null = gridContainer.querySelector('.new-panel-btn');
+    if (!addPanelElem) {
+        console.log("Unable to find addPanelElem for function moveAddPanel()");
+        return;
+    }
+
     gridContainer.appendChild(addPanelElem);
 
-    console.log(panelScores.length);
     if (panelScores.length >= MAXIMUM_PANELS) {
-        console.log("Reached here!");
         addPanelElem.style.display = 'none';
     } else { addPanelElem.style.display = 'inline-block'; }
 }
 
-// Appends new panel to the Grid
-function newPanel(panelName=null) {
+/**
+ * Creates a new panel. Used dynamically when the add panel button is pressed.
+ * @param panelName The name of the new panel.
+ * @returns void
+ */
+const newPanel = (panelName : string): void => {
 
     if (panelName == null) {
         panelName = prompt("Enter a name for the new panel");
@@ -33,6 +51,10 @@ function newPanel(panelName=null) {
      */
 
     const scores = document.getElementById('scores-grid');
+    if (!scores) {
+        console.error("Unable to find scores grid for function newPanel()");
+        return;
+    }
 
     // TODO: Condense each of these into a single function to create a new element in the DOM
     // Create the score panel (holds all panel elements)
@@ -99,13 +121,17 @@ function newPanel(panelName=null) {
     moveAddPanel();
 }
 
-function getPanelIndex(panelElem) {
+const getPanelIndex = (panelElem : HTMLElement): number | undefined => {
     const grid = panelElem.parentNode; // The grid container
+    if (!grid) {
+        console.error("Unable to find grid element in getPanelIndex()");
+        return;
+    }
     const children = Array.from(grid.children);
     return children.indexOf(panelElem);
 }
 
-function resetAllPanels() {
+const resetAllPanels = (): void => {
     document.querySelectorAll('.score-text').forEach((panelText) => {
         panelText.textContent = "0";
     })
@@ -213,12 +239,12 @@ document.querySelectorAll('.increment-btns').forEach(panelBtns => {
 });
 
 const MAXIMUM_PANELS = 9;
-let panelScores = [0, 0, 0, 0];
-let currentTime = 300;
-let timerElem = document.querySelector('.timer-body-label');
+const panelScores: number[] = [0, 0, 0, 0];
+const currentTime: number = 300;
+const timerElem: Element = document.querySelector('.timer-body-label');
 
 let timerInterval;
-let running = true;
+let running: boolean = true;
 startTimer();
 
 
