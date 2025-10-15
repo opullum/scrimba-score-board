@@ -1,5 +1,3 @@
-
-
 /**
  * Adds a new panel to the page. If the maximum panels have been reached
  * then hide the panel addition element.
@@ -7,15 +5,15 @@
  */
 
 const moveAddPanel = (): void => {
-    const gridContainer : HTMLElement | null = document.querySelector('.scores') 
+    const gridContainer : HTMLElement | null = document.querySelector('.scores')
     if (!gridContainer) {
-        console.log("Unable to find gridContainer for function moveAddPanel()");
+        console.error("Unable to find gridContainer for function moveAddPanel()");
         return;
     }
 
     const addPanelElem: HTMLElement | null = gridContainer.querySelector('.new-panel-btn');
     if (!addPanelElem) {
-        console.log("Unable to find addPanelElem for function moveAddPanel()");
+        console.error("Unable to find addPanelElem for function moveAddPanel()");
         return;
     }
 
@@ -23,10 +21,26 @@ const moveAddPanel = (): void => {
 
     if (panelScores.length >= MAXIMUM_PANELS) {
         addPanelElem.style.display = 'none';
-    } else { addPanelElem.style.display = 'inline-block'; }
+    } else { 
+        addPanelElem.style.display = 'inline-block'; 
+    }
 }
 
-/**
+const addElem = (
+    type     : string,
+    parent?  : HTMLElement,
+    text?    : string | null,
+    classes? : string,
+    onclick? : Function
+) => {
+    const newElem = document.createElement(type);
+    if (parent)   { parent.appendChild(newElem); }
+    if (classes)  { newElem.classList.add(classes); }
+    if (text)     { newElem.textContent = text; }
+    if (onclick)  { newElem.onclick = (event) => onclick(event); }
+}
+
+ /*
  * Creates a new panel. Used dynamically when the add panel button is pressed.
  * @param panelName The name of the new panel.
  * @returns void
@@ -38,19 +52,6 @@ const newPanel = (panelName : string | null): void => {
             panelName = prompt("Enter a name for the new panel");
         }
     }
-
-    /**
-     * Panel Format (divs):
-     * score-panel
-     *  score-panel-title
-     *  score-panel-display
-     *      score-text
-     *  score-panel-btns
-     *      increment-btns
-     *          panel-btns
-     *      remove-panel-btn
-     */
-
     const scores = document.getElementById('scores-grid');
     if (!scores) {
         console.error("Unable to find scores grid for function newPanel()");
@@ -122,13 +123,13 @@ const newPanel = (panelName : string | null): void => {
     moveAddPanel();
 }
 
-const getPanelIndex = (panelElem : HTMLElement): number | undefined => {
-    const grid = panelElem.parentNode; // The grid container
+const getPanelIndex   = (panelElem : HTMLElement): number | undefined => {
+    const grid        = panelElem.parentNode; // The grid container
     if (!grid) {
         console.error("Unable to find grid element in getPanelIndex()");
         return;
     }
-    const children = Array.from(grid.children);
+    const  children   = Array.from(grid.children);
     return children.indexOf(panelElem);
 }
 
@@ -142,20 +143,20 @@ const resetAllPanels = (): void => {
 }
 
 const removePanel = (event: Event): void => {
-    const panelGrid: HTMLElement | null = document.getElementById('scores-grid');
+    const panelGrid:  HTMLElement | null = document.getElementById('scores-grid');
     const buttonElem: HTMLElement | null = event.currentTarget as HTMLElement | null;
 
     if (!buttonElem || !panelGrid) {
-        console.log("Unable to find required elements for removePanel()");
+        console.error("Unable to find required elements for removePanel()");
         return;
     }
 
-    const panel: HTMLElement | null = buttonElem.closest('.score-panel');
-    let index : number | undefined;
-    if (panel) { index = getPanelIndex(panel); } 
+    const panel  :    HTMLElement | null  = buttonElem.closest('.score-panel');
+    let index    :    number | undefined;
 
+    if (panel) { index = getPanelIndex(panel); } 
     if (!panel || !index) {
-        console.log("Unable to find required elements for removePanel()");
+        console.error("Unable to find required elements for removePanel()");
         return;
     } 
 
@@ -168,7 +169,7 @@ const addScore = (event: Event, increment: number) =>  {
     const buttonElem = event.currentTarget;
     console.log(buttonElem);
     // const panelElem = buttonElem.parentNode.parentNode.parentNode;
-    const panelElem = buttonElem.closest('.score-panel');
+    const panelElem   = buttonElem.closest('.score-panel');
     const displayText = panelElem.querySelector('.score-panel-display h2');
     const scoresIndex = getPanelIndex(panelElem);
 
@@ -184,29 +185,28 @@ function formatTime(timeSeconds: number) {
     return `${remainingMinutes}:${remainingSeconds.toString().padStart(2, '0')}`;
 }
 
-function highlightWinning() {
-    let homePanel: Element = document.getElementById('home-team').querySelector('.score-panel-display');
-    let guestPanel: Element = document.getElementById('guest-team').querySelector('.score-panel-display');
-
-    console.log("reached here");
-    console.log(`Home: ${panelScores[0]} Guest: ${panelScores[1]}`);
+/**
+ * Modifies the Home Team and Guest Panel teams with a slight glow to highlight the
+ * current winner team (based on points)
+ * @returns none
+ */
+const highlightWinningTeam = () : void => {
+    let homePanel  : HTMLElement = document.getElementById('home-team').querySelector('.score-panel-display');
+    let guestPanel : HTMLElement = document.getElementById('guest-team').querySelector('.score-panel-display');
 
     if (panelScores[0] > panelScores[1]) {
-        console.log("1");
-        homePanel.style.boxShadow = "0 0 20px rgba(38, 131, 63, 0.5)";
+        homePanel.style.boxShadow  = "0 0 20px rgba(38, 131, 63, 0.5)";
         guestPanel.style.boxShadow = 'none';
     } else if (panelScores[0] < panelScores[1]) {
-        console.log("2");
-        homePanel.style.boxShadow = 'none';
+        homePanel.style.boxShadow  = 'none';
         guestPanel.style.boxShadow = "0 0 20px rgba(38, 131, 63, 0.5)";
-    } else {
-        console.log("3");
-        homePanel.style.boxShadow = 'none';
+    } else { 
+        homePanel.style.boxShadow  = 'none';
         guestPanel.style.boxShadow = 'none';
     }
 }
 
-function startTimer() {
+const startTimer = () => {
     timerInterval = setInterval(() => {
         if (currentTime > 0) {
             currentTime--;
@@ -216,50 +216,51 @@ function startTimer() {
     return timerInterval;
 }
 
-function stopTimer() {
+const stopTimer = () => {
     clearInterval(timerInterval);
 }
 
-function setTime() {
+const setTime = () => {
     let retrievedTime = prompt("Enter the time in seconds");
     currentTime = Number(retrievedTime);
 }
 
-function newGame() {
+const newGame = () => {
     currentTime = 300;
     resetAllPanels();
     highlightWinning();
 }
 
-function pauseTimer() {
-    let pauseBtn = document.getElementById("pauseBtn");
+const pauseTimer = () => {
+    let pauseBtn : HTMLElement = document.getElementById("pauseBtn");
+
     running = !running;
     if (!running) {
         stopTimer();
         pauseBtn.textContent = "Resume";
     } else {
-        timerInterval = startTimer();
+        timerInterval        = startTimer();
         pauseBtn.textContent = "Pause";
     }
 }
 
 document.querySelectorAll('.increment-btns').forEach(panelBtns => {
-    const btns = panelBtns.querySelectorAll('.panel-btn');
+    const btns : HTMLElement[] = panelBtns.querySelectorAll('.panel-btn');
     if (btns.length === 3) {
-        btns[0].onclick = (event) => addScore(event, 1);
-        btns[1].onclick = (event) => addScore(event, 2);
-        btns[2].onclick = (event) => addScore(event, 3);
+        btns[0].onclick = (event: Event) => addScore(event, 1);
+        btns[1].onclick = (event: Event) => addScore(event, 2);
+        btns[2].onclick = (event: Event) => addScore(event, 3);
     }
 });
 
-const MAXIMUM_PANELS = 9;
-const panelScores: number[] = [0, 0, 0, 0];
-const timerElem: Element = document.querySelector('.timer-body-label');
+const MAXIMUM_PANELS : number   = 9;
+const panelScores    : number[] = [0, 0, 0, 0];
 
-let currentTime: number = 300;
+const timerElem      : Element  = document.querySelector('.timer-body-label');
+let   currentTime    : number   = 300;
 let timerInterval;
-let running: boolean = true;
 
+let running          : boolean = true;
 startTimer();
 
 
