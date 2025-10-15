@@ -27,25 +27,28 @@ const moveAddPanel = (): void => {
 }
 
 const addElem = (
-    type     : string,
-    parent?  : HTMLElement,
-    text?    : string | null,
-    classes? : string,
-    onclick? : Function
+    type      : string,
+    parent?   : HTMLElement,
+    text?     : string | null,
+    classes?  : string,
+    onclick?  : Function,
+    ...params : any[]
 ) => {
     const newElem = document.createElement(type);
     if (parent)   { parent.appendChild(newElem); }
     if (classes)  { newElem.classList.add(classes); }
     if (text)     { newElem.textContent = text; }
-    if (onclick)  { newElem.onclick = (event) => onclick(event); }
+    if (onclick)  { newElem.onclick = (event) => onclick(event, ...params); }
 }
+
+addElem('h1', undefined, "test", undefined, undefined);
 
  /*
  * Creates a new panel. Used dynamically when the add panel button is pressed.
  * @param panelName The name of the new panel.
  * @returns void
  */
-const newPanel = (panelName : string | null): void => {
+const createPanel = (panelName : string | null): void => {
 
     if (panelName == null) {
         while (panelName == null) {
@@ -123,6 +126,29 @@ const newPanel = (panelName : string | null): void => {
     moveAddPanel();
 }
 
+const removePanel = (event: Event): void => {
+    const panelGrid:  HTMLElement | null = document.getElementById('scores-grid');
+    const buttonElem: HTMLElement | null = event.currentTarget as HTMLElement | null;
+
+    if (!buttonElem || !panelGrid) {
+        console.error("Unable to find required elements for removePanel()");
+        return;
+    }
+
+    const panel: HTMLElement | null  = buttonElem.closest('.score-panel');
+    let   index: number | undefined;
+
+    if (panel) { index = getPanelIndex(panel); } 
+    if (!panel || !index) {
+        console.error("Unable to find required elements for removePanel()");
+        return;
+    } 
+
+    panelScores.splice(index, 1);
+    panelGrid.removeChild(panel);
+    moveAddPanel();
+}
+
 const getPanelIndex   = (panelElem : HTMLElement): number | undefined => {
     const grid        = panelElem.parentNode; // The grid container
     if (!grid) {
@@ -142,39 +168,22 @@ const resetAllPanels = (): void => {
     }
 }
 
-const removePanel = (event: Event): void => {
-    const panelGrid:  HTMLElement | null = document.getElementById('scores-grid');
-    const buttonElem: HTMLElement | null = event.currentTarget as HTMLElement | null;
-
-    if (!buttonElem || !panelGrid) {
-        console.error("Unable to find required elements for removePanel()");
-        return;
-    }
-
-    const panel  :    HTMLElement | null  = buttonElem.closest('.score-panel');
-    let index    :    number | undefined;
-
-    if (panel) { index = getPanelIndex(panel); } 
-    if (!panel || !index) {
-        console.error("Unable to find required elements for removePanel()");
-        return;
-    } 
-
-    panelScores.splice(index, 1);
-    panelGrid.removeChild(panel);
-    moveAddPanel();
+const newGame = () => {
+    currentTime = 300;
+    resetAllPanels();
+    highlightWinning();
 }
+
 
 const addScore = (event: Event, increment: number) =>  {
     const buttonElem = event.currentTarget;
-    console.log(buttonElem);
-    // const panelElem = buttonElem.parentNode.parentNode.parentNode;
+
     const panelElem   = buttonElem.closest('.score-panel');
     const displayText = panelElem.querySelector('.score-panel-display h2');
     const scoresIndex = getPanelIndex(panelElem);
 
     panelScores[scoresIndex] += increment;
-    displayText.textContent = `${panelScores[scoresIndex]}`;
+    displayText.textContent  = `${panelScores[scoresIndex]}`;
 
     if (scoresIndex == 0 || scoresIndex == 1) { highlightWinning(); }
 }
@@ -244,14 +253,6 @@ const pauseTimer = () => {
     }
 }
 
-document.querySelectorAll('.increment-btns').forEach(panelBtns => {
-    const btns : HTMLElement[] = panelBtns.querySelectorAll('.panel-btn');
-    if (btns.length === 3) {
-        btns[0].onclick = (event: Event) => addScore(event, 1);
-        btns[1].onclick = (event: Event) => addScore(event, 2);
-        btns[2].onclick = (event: Event) => addScore(event, 3);
-    }
-});
 
 const MAXIMUM_PANELS : number   = 9;
 const panelScores    : number[] = [0, 0, 0, 0];
@@ -261,6 +262,16 @@ let   currentTime    : number   = 300;
 let timerInterval;
 
 let running          : boolean = true;
+
+document.querySelectorAll('.increment-btns').forEach(panelBtns => {
+    const btns : HTMLElement[] = panelBtns.querySelectorAll('.panel-btn');
+    if (btns.length === 3) {
+        btns[0].onclick = (event: Event) => addScore(event, 1);
+        btns[1].onclick = (event: Event) => addScore(event, 2);
+        btns[2].onclick = (event: Event) => addScore(event, 3);
+    }
+});
+
 startTimer();
 
 
