@@ -26,7 +26,7 @@ const moveAddPanel = (): void => {
     }
 }
 
-const addElem = (
+const createElem = (
     type      : string,
     parent?   : HTMLElement,
     text?     : string | null,
@@ -55,46 +55,31 @@ const createPanel = (panelName : string | null): void => {
             panelName = prompt("Enter a name for the new panel");
         }
     }
+
     const scores = document.getElementById('scores-grid');
     if (!scores) {
         console.error("Unable to find scores grid for function newPanel()");
         return;
     }
 
-    // TODO: Condense each of these into a single function to create a new element in the DOM
-    // Create the score panel (holds all panel elements)
-    const panelDiv = addElem('div', scores, undefined, 'score-panel', undefined);
-
-    // Score panel title (score-panel-title)
-    const panelTitle = addElem('h1', panelDiv, `${panelName}`, 'score-panel-title', undefined);
-    
-    // Score panel display (score-panel-display)
-    const panelDisplay = addElem('div', panelDiv, undefined, 'score-panel-display', undefined);
-
-    // Score text (score-text : child of score-panel-display)
-    const displayText = addElem('h2', panelDisplay, "0", 'score-text', undefined);
-
-    // Container to hold score panel buttons (score-panel-btns)
-    const panelButtons = addElem('div', panelDiv, undefined, 'score-panel-btns', undefined);
-    
-    // Container to hold increment buttons (increment-btns : child of score-panel-buttons)
-    const incrementButtons = addElem('div', panelButtons, undefined, undefined, undefined);
+    // Creating panel elements
+    const panelDiv         = createElem('div', scores, undefined, 'score-panel');
+    const panelTitle       = createElem('h1', panelDiv, `${panelName}`, 'score-panel-title');
+    const panelDisplay     = createElem('div', panelDiv, undefined, 'score-panel-display');
+    const displayText      = createElem('h2', panelDisplay, "0", 'score-text', );
+    const panelButtons     = createElem('div', panelDiv, undefined, 'score-panel-btns');
+    const incrementButtons = createElem('div', panelButtons, undefined, undefined);
     
     // Creating three increment buttons (panel-btn : children of increment-btns)
-    const firstButton  = addElem('button', incrementButtons, "+1", 'panel-btn');
-    const secondButton = addElem('button', incrementButtons, "+2", 'panel-btn');
-    const thirdButton  = addElem('button', incrementButtons, "+3", 'panel-btn');
-
-    const removeButton = document.createElement('button');
-    removeButton.classList.add('remove-panel-btn');
-    removeButton.textContent = "Remove";
-    panelButtons.appendChild(removeButton);
+    const firstButton  = createElem('button', incrementButtons, "+1", 'panel-btn');
+    const secondButton = createElem('button', incrementButtons, "+2", 'panel-btn');
+    const thirdButton  = createElem('button', incrementButtons, "+3", 'panel-btn');
+    const removeButton = createElem('button', panelButtons, "Remove", 'remove-panel-btn');
     
     // Attaching event handlers to newly created buttons (panel-btn and remove-panel-btn)
-    firstButton.onclick = (event) => addScore(event, 1);
+    firstButton.onclick  = (event) => addScore(event, 1);
     secondButton.onclick = (event) => addScore(event, 2);
-    thirdButton.onclick = (event) => addScore(event, 3);
-
+    thirdButton.onclick  = (event) => addScore(event, 3);
     removeButton.onclick = (event) => removePanel(event);
     
     panelScores.push(0);
@@ -113,7 +98,7 @@ const removePanel = (event: Event): void => {
     const panel: HTMLElement | null  = buttonElem.closest('.score-panel');
     let   index: number | undefined;
 
-    if (panel) { index = getPanelIndex(panel); } 
+    if (panel) { index = getPanelIndex(panel); }
     if (!panel || !index) {
         console.error("Unable to find required elements for removePanel()");
         return;
@@ -146,21 +131,38 @@ const resetAllPanels = (): void => {
 const newGame = () => {
     currentTime = 300;
     resetAllPanels();
-    highlightWinning();
+    highlightWinningTeam();
 }
 
 
 const addScore = (event: Event, increment: number) =>  {
+
     const buttonElem = event.currentTarget;
 
-    const panelElem   = buttonElem.closest('.score-panel');
-    const displayText = panelElem.querySelector('.score-panel-display h2');
-    const scoresIndex = getPanelIndex(panelElem);
+    if (!(buttonElem instanceof HTMLElement)) {
+        console.error("Unable to find necessary elements for addScore()");
+        return;
+    }
+
+    const panelElem : HTMLElement | null = buttonElem.closest('.score-panel');
+
+    if (!panelElem || !buttonElem) {
+        console.error("Unable to find necessary elements for addScore()");
+        return;
+    }
+
+    const displayText : HTMLElement | null   = panelElem.querySelector('.score-panel-display h2');
+    const scoresIndex : number | undefined   = getPanelIndex(panelElem);
+
+    if (!displayText || !scoresIndex) {
+        console.error("Unable to find necessary elements for addScore()");
+        return;
+    }
 
     panelScores[scoresIndex] += increment;
     displayText.textContent  = `${panelScores[scoresIndex]}`;
 
-    if (scoresIndex == 0 || scoresIndex == 1) { highlightWinning(); }
+    if (scoresIndex == 0 || scoresIndex == 1) { highlightWinningTeam(); }
 }
 
 function formatTime(timeSeconds: number) {
@@ -175,8 +177,13 @@ function formatTime(timeSeconds: number) {
  * @returns none
  */
 const highlightWinningTeam = () : void => {
-    let homePanel  : HTMLElement = document.getElementById('home-team').querySelector('.score-panel-display');
-    let guestPanel : HTMLElement = document.getElementById('guest-team').querySelector('.score-panel-display');
+    const homePanel  : HTMLElement | null  = document.querySelector('#home-team .score-panel-display');
+    const guestPanel : HTMLElement | null  = document.querySelector('#guest-team .score-panel-display')
+
+    if (!homePanel || !guestPanel) {
+        console.error("Unable to find required elements for function highlightWinningTeam()");
+        return;
+    }
 
     if (panelScores[0] > panelScores[1]) {
         homePanel.style.boxShadow  = "0 0 20px rgba(38, 131, 63, 0.5)";
@@ -191,6 +198,11 @@ const highlightWinningTeam = () : void => {
 }
 
 const startTimer = () => {
+    if (!timerElem) { 
+        console.log("Unable to find timer element for startTimer()");    
+        return; 
+    }
+
     timerInterval = setInterval(() => {
         if (currentTime > 0) {
             currentTime--;
@@ -205,18 +217,17 @@ const stopTimer = () => {
 }
 
 const setTime = () => {
-    let retrievedTime = prompt("Enter the time in seconds");
-    currentTime = Number(retrievedTime);
-}
-
-const newGame = () => {
-    currentTime = 300;
-    resetAllPanels();
-    highlightWinning();
+    let retrievedTime : string | null = prompt("Enter the time in seconds");
+        currentTime                   = Number(retrievedTime);
 }
 
 const pauseTimer = () => {
-    let pauseBtn : HTMLElement = document.getElementById("pauseBtn");
+    let pauseBtn : HTMLElement | null = document.getElementById("pauseBtn");
+
+    if (!pauseBtn) {
+        console.error("Unable to find element '#pauseBtn' for function pauseTimer!");
+        return;
+    }
 
     running = !running;
     if (!running) {
@@ -232,9 +243,9 @@ const pauseTimer = () => {
 const MAXIMUM_PANELS : number   = 9;
 const panelScores    : number[] = [0, 0, 0, 0];
 
-const timerElem      : Element  = document.querySelector('.timer-body-label');
+const timerElem      : Element | null  = document.querySelector('.timer-body-label');
 let   currentTime    : number   = 300;
-let timerInterval;
+let   timerInterval;
 
 let running          : boolean = true;
 
