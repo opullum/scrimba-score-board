@@ -33,15 +33,15 @@ const addElem = (
     classes?  : string,
     onclick?  : Function,
     ...params : any[]
-) => {
+): HTMLElement => {
     const newElem = document.createElement(type);
     if (parent)   { parent.appendChild(newElem); }
     if (classes)  { newElem.classList.add(classes); }
     if (text)     { newElem.textContent = text; }
     if (onclick)  { newElem.onclick = (event) => onclick(event, ...params); }
-}
 
-addElem('h1', undefined, "test", undefined, undefined);
+    return newElem;
+}
 
  /*
  * Creates a new panel. Used dynamically when the add panel button is pressed.
@@ -63,52 +63,27 @@ const createPanel = (panelName : string | null): void => {
 
     // TODO: Condense each of these into a single function to create a new element in the DOM
     // Create the score panel (holds all panel elements)
-    const panelDiv = document.createElement('div');
-    panelDiv.classList.add('score-panel');
-    scores.appendChild(panelDiv);
+    const panelDiv = addElem('div', scores, undefined, 'score-panel', undefined);
 
     // Score panel title (score-panel-title)
-    const panelTitle = document.createElement('h1');
-    panelTitle.textContent = `${panelName}`;
-    panelTitle.classList.add('score-panel-title');
-    panelDiv.appendChild(panelTitle);
+    const panelTitle = addElem('h1', panelDiv, `${panelName}`, 'score-panel-title', undefined);
     
     // Score panel display (score-panel-display)
-    const panelDisplay = document.createElement('div');
-    panelDisplay.classList.add('score-panel-display');
-    panelDiv.appendChild(panelDisplay);
+    const panelDisplay = addElem('div', panelDiv, undefined, 'score-panel-display', undefined);
 
     // Score text (score-text : child of score-panel-display)
-    const displayText = document.createElement('h2');
-    displayText.textContent = "0";
-    displayText.classList.add('score-text');
-    panelDisplay.appendChild(displayText);
-    
+    const displayText = addElem('h2', panelDisplay, "0", 'score-text', undefined);
+
     // Container to hold score panel buttons (score-panel-btns)
-    const panelButtons = document.createElement('div');
-    panelButtons.classList.add('score-panel-btns');
-    panelDiv.appendChild(panelButtons);
+    const panelButtons = addElem('div', panelDiv, undefined, 'score-panel-btns', undefined);
     
     // Container to hold increment buttons (increment-btns : child of score-panel-buttons)
-    const incrementButtons = document.createElement('div');
-    incrementButtons.classList.add('increment-btns');
-    panelButtons.appendChild(incrementButtons);
+    const incrementButtons = addElem('div', panelButtons, undefined, undefined, undefined);
     
     // Creating three increment buttons (panel-btn : children of increment-btns)
-    const firstButton = document.createElement('button');
-    firstButton.classList.add('panel-btn');
-    firstButton.textContent = "+1";
-    incrementButtons.appendChild(firstButton);
-
-    const secondButton = document.createElement('button');
-    secondButton.classList.add('panel-btn');
-    secondButton.textContent = "+2";
-    incrementButtons.appendChild(secondButton);
-    
-    const thirdButton = document.createElement('button');
-    thirdButton.classList.add('panel-btn');
-    thirdButton.textContent = "+3";
-    incrementButtons.appendChild(thirdButton);
+    const firstButton  = addElem('button', incrementButtons, "+1", 'panel-btn');
+    const secondButton = addElem('button', incrementButtons, "+2", 'panel-btn');
+    const thirdButton  = addElem('button', incrementButtons, "+3", 'panel-btn');
 
     const removeButton = document.createElement('button');
     removeButton.classList.add('remove-panel-btn');
