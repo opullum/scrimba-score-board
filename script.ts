@@ -186,7 +186,7 @@ const highlightWinningTeam = () : void => {
     const homePanel  : HTMLElement | null  = document.querySelector('#home-team .score-panel-display');
     const guestPanel : HTMLElement | null  = document.querySelector('#guest-team .score-panel-display')
 
-    if (!homePanel || !guestPanel) {
+    if (!homePanel || !guestPanel || !panelScores) {
         console.error("Unable to find required elements for function highlightWinningTeam()");
         return;
     }
