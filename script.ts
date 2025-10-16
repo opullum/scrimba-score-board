@@ -26,6 +26,12 @@ const moveAddPanel = () : void => {
     }
 }
 
+/**
+ * Creates a new element. Used to reduce the amount of lines needed to add
+ * new elements to the DOM. Elements type, text, and classes only accept
+ * valid string parameters: i.e. 'h1' or '.example h1'.
+ * @return The newly created element as HTMLElement
+ */
 const createElem = (
     type      : string,
     parent?   : HTMLElement,
@@ -34,7 +40,7 @@ const createElem = (
     onclick?  : Function,
     ...params : any[]
 ): HTMLElement => {
-    const newElem = document.createElement(type);
+    const newElem : HTMLElement = document.createElement(type);
     if (parent)   { parent.appendChild(newElem); }
     if (classes)  { newElem.classList.add(classes); }
     if (text)     { newElem.textContent = text; }
@@ -45,8 +51,8 @@ const createElem = (
 
  /*
  * Creates a new panel. Used dynamically when the add panel button is pressed.
- * @param panelName The name of the new panel.
- * @returns void
+ * Function createElem() used to simplify element creation.
+ * @return void
  */
 const createPanel = (panelName : string | null): void => {
 
@@ -154,7 +160,7 @@ const addScore = (event: Event, increment: number) =>  {
     const displayText : HTMLElement | null   = panelElem.querySelector('.score-panel-display h2');
     const scoresIndex : number | undefined   = getPanelIndex(panelElem);
 
-    if (!displayText || !scoresIndex) {
+    if (!displayText || !scoresIndex || !panelScores) {
         console.error("Unable to find necessary elements for addScore()");
         return;
     }
