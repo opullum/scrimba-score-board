@@ -4,7 +4,7 @@
  * @returns void
  */
 
-const moveAddPanel = (): void => {
+const moveAddPanel = () : void => {
     const gridContainer : HTMLElement | null = document.querySelector('.scores')
     if (!gridContainer) {
         console.error("Unable to find gridContainer for function moveAddPanel()");
@@ -197,7 +197,7 @@ const highlightWinningTeam = () : void => {
     }
 }
 
-const startTimer = () => {
+const startTimer = () : number | undefined => {
     if (!timerElem) { 
         console.log("Unable to find timer element for startTimer()");    
         return; 
@@ -245,12 +245,15 @@ const panelScores    : number[] = [0, 0, 0, 0];
 
 const timerElem      : Element | null  = document.querySelector('.timer-body-label');
 let   currentTime    : number   = 300;
-let   timerInterval;
+let   timerInterval  : number | undefined;
 
 let running          : boolean = true;
 
+const newPanelBtn : HTMLElement | null = document.querySelector('.new-panel-btn');
+if (newPanelBtn) { newPanelBtn.onclick = () => createPanel(null) };
+
 document.querySelectorAll('.increment-btns').forEach(panelBtns => {
-    const btns : HTMLElement[] = panelBtns.querySelectorAll('.panel-btn');
+    const btns : HTMLElement[] = Array.from(panelBtns.querySelectorAll('.panel-btn'));
     if (btns.length === 3) {
         btns[0].onclick = (event: Event) => addScore(event, 1);
         btns[1].onclick = (event: Event) => addScore(event, 2);
